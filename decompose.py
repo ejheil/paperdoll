@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import psd_tools, os, sys, json
+import psd_tools, os, sys, json, shutil
 
 psdfile = sys.argv[1]
 
@@ -34,8 +34,6 @@ def decompose_layer(layer, main_dir, parent_dirs, index=0):
     layer_filename = layer_filename + ".png"
     full_layer_path = full_layer_path + ".png"
     image = layer.composite()
-    # image_size = image.size
-    # print("image size is: ", image_size)
     if os.path.exists(full_layer_path):
       os.remove(full_layer_path)
     image.save(full_layer_path)
@@ -49,7 +47,7 @@ image_size = psd.composite().size
 decomposed_stuff = decompose_layer(psd, output_dir, [])
 output = { "layers" : decomposed_stuff, "size": image_size }
 
-print(json.dumps(decomposed_stuff, indent=2))
+#print(json.dumps(decomposed_stuff, indent=2))
 with open(os.path.join(output_dir, "layerinfo.json"), "w") as fp:
   json.dump(output, fp)
 

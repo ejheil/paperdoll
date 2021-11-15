@@ -3,6 +3,21 @@
 A tool for generating indivitual images from the randomized layers
 of a PSD file.
 
+# PSD Structure
+
+The names of the PSD's layers (including groups) define how
+Paperdoll's compose.py and index.html behave.
+
+Any layer or group whose name ends with "optional" may or may not be
+included in the final output (chosen randomly).
+
+Any group whose name begins with "choice" will have one and only one
+of its direct children included in the final output (chosen randomly).
+
+A group may be both "choice" and "optional."
+
+That's all.
+
 # Usage
 
 Decompose a psd (creates `mypsd_decomposed` and inside it, the image elements

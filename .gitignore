@@ -25,6 +25,7 @@ tags
 bin
 lib
 share
+pyenv.cfg
 
 ## other
 

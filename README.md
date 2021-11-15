@@ -29,4 +29,15 @@ before the program gives up and decides that it's finished
 images at a chosen resolution and re-create them on a button press.
 It will be copied by `decompose.py` into the decompose directory.
 
+It's a great way to quickly check what kinds of things your current
+decomposition generates without having to spit out and view a bunch.
+of real files.
+
+You can't use it from a file:// URL because it accesses external files.
+But since you're using python anyway, you can spin up a simple http server
+like this:
+
+```
+python -m http.server
+```
 

@@ -1,3 +1,7 @@
+## our stuff
+*_decomposed
+*_output
+
 ## emacs stuff
 *~
 \#*\#
@@ -25,7 +29,7 @@ tags
 bin
 lib
 share
-pyenv.cfg
+pyvenv.cfg
 
 ## other
 

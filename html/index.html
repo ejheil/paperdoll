@@ -1,0 +1,99 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>
+      Viewer
+    </title>
+  </head>
+  <body>
+    <div>
+      Image size: <input id="imageSize" type="text" value="800">
+      <button id="regenerate" onClick="displayStuff()">Regenerate</button>
+    <div>
+      <canvas id="theCanvas"></canvas>
+    </div>
+  </body>
+  <script>
+    fetch('layerinfo.json').then(function(response) {
+      return response.json();
+    }).then(function(info) {
+      document.imageInfo = info;
+      displayStuff();
+    }).catch(function(err) {
+      console.log(err);
+    });
+
+    function displayStuff() {
+      var info = document.imageInfo;
+      var MAX_SIZE = parseInt(document.getElementById("imageSize").value)  || 800;
+      var size = info.size;
+      var height = size[0];
+      var width = size[1];
+      var biggestDimension = Math.max(width, height);
+      var scaleFactor = 1;
+      if (biggestDimension > MAX_SIZE) {
+        scaleFactor = MAX_SIZE / biggestDimension;
+      }
+      var layer = info.layers;
+      var theCanvas = document.getElementById("theCanvas");
+      theCanvas.width = 0; // clear the canvas
+      theCanvas.height = height * scaleFactor;
+      theCanvas.width = width * scaleFactor;
+      var imagesToComposite = [];
+      iterateImages(layer, [], imagesToComposite);
+
+      var imageElements = [];
+      var imagePromises = [];
+
+      imagesToComposite.forEach((imagePath) => {
+        var imageElement = new Image();
+        var imagePromise = new Promise( (resolve, reject) => {
+          imageElement.onload = () => { resolve();}
+        });
+        imageElements.push(imageElement);
+        imagePromises.push(imagePromise);
+        imageElement.src = imagePath;
+      });
+      Promise.all(imagePromises).then((values) => {
+        var context = theCanvas.getContext('2d');
+        imageElements.forEach((imageElement) => {
+          context.drawImage(imageElement, 0, 0, height * scaleFactor, width * scaleFactor);
+        });
+      });
+    }
+
+    function getLayerName(path) {
+      var fileName = path.split('/').pop();
+      fileName = fileName.replace(/^[0-9]+-/, '');
+      fileName = fileName.replace(/.png$/, '');
+      return fileName;
+    }
+
+    function iterateImages(layer, parentDirs, imagesToComposite) {
+      var { name, type, filename, contents } = layer;
+      var layerPath = [...parentDirs, filename].join("/");
+
+      if (name.endsWith("optional") && (Math.random() > 0.5)) {
+        return;
+      }
+
+      if (type == "image") {
+        imagesToComposite.push(layerPath);
+      }
+
+      if (type == "group") {
+        var groupDirs = [...parentDirs, filename];
+
+        if (name.startsWith("choice") && (contents.length > 0)) {
+          var chosenIndex = Math.floor(Math.random() * contents.length);
+          iterateImages(contents[chosenIndex], groupDirs, imagesToComposite);
+        } else {
+          contents.forEach((sublayer) => {
+            iterateImages(sublayer, groupDirs, imagesToComposite);
+          });
+        }
+      }
+    }
+  </script>
+</html>

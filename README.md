@@ -20,8 +20,8 @@ That's all.
 
 # Usage
 
-Decompose a psd (creates `mypsd_decomposed` and inside it, the image elements
-and `layerinfo.json`):
+Decompose a psd (creates `mypsd_decomposed` and inside it, the image 
+elements and `layerinfo.json`):
 
 ```
 python decompose.py mypsd.psd
@@ -37,6 +37,12 @@ number of images = how many final images are desired
 
 collision limit = how many times a duplicate result must be reached
 before the program gives up and decides that it's finished
+
+The images are given names which are a short hash based on a combination 
+of the names of the layers they were made out of.  The same layers will 
+produce the same hash name, so identical images will end up with 
+identical filenames and you can tell that images with different 
+filenames are different.
 
 # Web "app"
 

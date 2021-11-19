@@ -53,8 +53,8 @@ while images_to_make > 0 and collisions < collision_limit:
   choices_made = []
 
   with open(os.path.join(decompose_dir, "layerinfo.json")) as f:
-    layerinfo = json.load(f)
-    
+    imageinfo = json.load(f)
+  layerinfo = imageinfo["layers"]  
   parse_info(layerinfo, decompose_dir)
   choice_string = "-".join([str(choice) for choice in choices_made])
   h = hashlib.md5()
